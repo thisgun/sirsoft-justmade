@@ -1,0 +1,65 @@
+{
+  "meta": { "is_partial": true, "description": "Atelier popular products — clean section, 3-col grid" },
+  "type": "basic",
+  "name": "Div",
+  "if": "{{popularProducts.data && popularProducts.data.length > 0}}",
+  "props": { "className": "mt-24 pt-16 border-t border-base-300/50" },
+  "children": [
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex justify-between items-end mb-12" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "children": [
+            { "type": "basic", "name": "Span", "props": { "className": "text-xs tracking-widest uppercase text-base-content/40 mb-3 block" }, "text": "Most Loved" },
+            { "type": "basic", "name": "H2", "props": { "className": "text-3xl lg:text-4xl font-black tracking-tighter text-base-content" }, "text": "$t:shop.popular_products" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "iteration": { "source": "{{(popularProducts.data ?? []).slice(0, 6)}}", "item_var": "product" },
+          "props": { "className": "contents" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Button",
+              "props": { "className": "flex flex-col items-stretch justify-start text-left w-full cursor-pointer group" },
+              "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products/{{product.id}}" } }],
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "aspect-[4/5] overflow-hidden bg-base-200 mb-6 relative" },
+                  "children": [
+                    { "type": "basic", "name": "Img", "if": "{{product.thumbnail_url}}", "props": { "src": "/api/plugins/sirsoft-imagetools/resize?src={{product.thumbnail_url}}&w=500", "alt": "{{product.name_localized}}", "loading": "lazy", "decoding": "async", "className": "w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" } },
+                    { "type": "basic", "name": "Icon", "if": "{{!product.thumbnail_url}}", "props": { "name": "image", "className": "absolute inset-0 m-auto w-12 h-12 text-base-content/10" } }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex flex-col gap-1" },
+                  "children": [
+                    { "type": "basic", "name": "H3", "props": { "className": "text-sm font-bold tracking-wide uppercase text-base-content" }, "text": "{{product.name_localized}}" },
+                    { "type": "basic", "name": "Span", "props": { "className": "text-xs text-primary font-semibold" }, "text": "{{product.selling_price_formatted}}" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

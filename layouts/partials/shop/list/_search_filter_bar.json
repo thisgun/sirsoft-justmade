@@ -1,0 +1,49 @@
+{
+  "meta": { "is_partial": true, "description": "Atelier: Sort button only (reference style)" },
+  "type": "basic",
+  "name": "Div",
+  "props": { "className": "flex items-center gap-4" },
+  "children": [
+    {
+      "comment": "검색 입력 (작은 밑줄 스타일)",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "relative" },
+      "children": [
+        { "type": "basic", "name": "Icon", "props": { "name": "search", "className": "absolute left-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-base-content/30 pointer-events-none" } },
+        {
+          "type": "basic",
+          "name": "Input",
+          "props": {
+            "type": "text",
+            "name": "keyword",
+            "placeholder": "$t:shop.search_placeholder",
+            "className": "pl-6 pr-2 py-2 w-40 text-xs bg-transparent border-0 border-b border-base-content/15 text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary transition-colors",
+            "value": "{{_local.keyword ?? query.keyword ?? ''}}"
+          },
+          "actions": [
+            { "type": "change", "handler": "setState", "params": { "target": "local", "keyword": "{{$event.target.value}}" } },
+            { "type": "keydown", "handler": "navigate", "key": "Enter", "params": { "path": "{{_global.shopBase}}/products", "mergeQuery": true, "query": { "keyword": "{{_local.keyword ?? ''}}", "page": "1" } } }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "Sort select (daisyUI bordered)",
+      "type": "composite",
+      "name": "Select",
+      "props": {
+        "name": "sort",
+        "value": "{{query.sort ?? 'latest'}}",
+        "className": "select select-bordered select-sm text-xs font-bold",
+        "options": [
+          { "value": "latest", "label": "$t:shop.sort.latest" },
+          { "value": "sales", "label": "$t:shop.sort.sales" },
+          { "value": "price_asc", "label": "$t:shop.sort.price_asc" },
+          { "value": "price_desc", "label": "$t:shop.sort.price_desc" }
+        ]
+      },
+      "actions": [{ "type": "change", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products", "mergeQuery": true, "query": { "sort": "{{$event.target.value}}", "page": "1" } } }]
+    }
+  ]
+}

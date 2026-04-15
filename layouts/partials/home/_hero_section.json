@@ -1,0 +1,367 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "홈 히어로 섹션 - Split Hero (커뮤니티 카피 + 신상품 비주얼 2x2)"
+  },
+  "type": "basic",
+  "name": "Div",
+  "props": {
+    "className": "relative mb-6 overflow-hidden rounded-3xl bg-base-200/40 shadow-sm"
+  },
+  "children": [
+    {
+      "comment": "=== 배경 장식: 은은한 라디얼 블롭 (neon 금지, blur-3xl로 soft) ===",
+      "type": "basic",
+      "name": "Div",
+      "props": {
+        "className": "pointer-events-none absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/10 blur-3xl"
+      }
+    },
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": {
+        "className": "pointer-events-none absolute bottom-0 left-0 w-72 h-72 rounded-full bg-primary/5 blur-3xl"
+      }
+    },
+    {
+      "comment": "=== 메인 컨테이너: 12컬럼 grid, 데스크톱 7/5 split, 모바일 단일 컬럼 ===",
+      "type": "basic",
+      "name": "Div",
+      "props": {
+        "className": "relative grid grid-cols-1 gap-8 p-6 lg:grid-cols-12 lg:gap-10 lg:p-12"
+      },
+      "children": [
+        {
+          "comment": "=== 좌측(col-span-7): 카피 + CTA + 스탯 바 ===",
+          "type": "basic",
+          "name": "Div",
+          "props": {
+            "className": "flex flex-col justify-between lg:col-span-7"
+          },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Div",
+              "props": { "className": "space-y-6" },
+              "children": [
+                {
+                  "comment": "Eyebrow: 라이브 뱃지 (접속자 수 - stats 기반)",
+                  "type": "basic",
+                  "name": "Div",
+                  "props": {
+                    "className": "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-base-content/5 backdrop-blur text-xs font-medium text-base-content/70 w-fit"
+                  },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "relative flex w-2 h-2" },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": { "className": "absolute inline-flex w-full h-full rounded-full bg-green-500 opacity-75 animate-ping" }
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": { "className": "relative inline-flex w-2 h-2 rounded-full bg-green-500" }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "text": "지금 {{stats?.data?.users ?? 0 | number}}명의 이웃이 함께 있어요"
+                    }
+                  ]
+                },
+                {
+                  "comment": "Headline (Korean first, break-keep, leading-tight, 2-line split)",
+                  "type": "basic",
+                  "name": "H1",
+                  "props": {
+                    "className": "text-4xl lg:text-6xl font-bold tracking-tight leading-tight break-keep text-base-content"
+                  },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "block" },
+                      "text": "취향이 통하는 사람들과"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "block text-primary" },
+                      "text": "마음에 드는 걸 찾는 곳."
+                    }
+                  ]
+                },
+                {
+                  "comment": "Subtitle - 자연스러운 한국어, 'AI 클리셰' 금지",
+                  "type": "basic",
+                  "name": "P",
+                  "props": {
+                    "className": "text-base lg:text-lg text-base-content/70 leading-relaxed break-keep max-w-xl"
+                  },
+                  "text": "커뮤니티에서 이야기를 나누고, 신상품을 먼저 만나보세요. 가입 없이도 둘러볼 수 있어요."
+                },
+                {
+                  "comment": "CTA row - Primary + Ghost 버튼",
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex flex-wrap items-center gap-3 pt-2" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Button",
+                      "props": {
+                        "className": "btn btn-atelier btn-lg rounded-full px-8 gap-2 shadow-lg"
+                      },
+                      "actions": [
+                        {
+                          "type": "click",
+                          "handler": "navigate",
+                          "params": { "path": "/board/popular" }
+                        }
+                      ],
+                      "children": [
+                        { "type": "basic", "name": "Span", "text": "커뮤니티 둘러보기" },
+                        {
+                          "type": "basic",
+                          "name": "Icon",
+                          "props": { "name": "arrow-right", "className": "w-4 h-4" }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Button",
+                      "props": {
+                        "className": "btn btn-ghost btn-lg rounded-full px-8 gap-2 hover:bg-base-200 transition-all duration-300 ease-out"
+                      },
+                      "actions": [
+                        {
+                          "type": "click",
+                          "handler": "navigate",
+                          "params": { "path": "{{_global.shopBase ?? ''}}/products" }
+                        }
+                      ],
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Icon",
+                          "props": { "name": "shopping-bag", "className": "w-4 h-4" }
+                        },
+                        { "type": "basic", "name": "Span", "text": "신상품 구경하기" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "comment": "=== 인라인 스탯 바 (데스크톱 전용, divider dot 스타일) ===",
+              "type": "basic",
+              "name": "Div",
+              "props": {
+                "className": "hidden lg:flex items-center gap-6 pt-10 mt-10 border-t border-base-content/5"
+              },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex flex-col" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-2xl font-bold text-base-content tracking-tight" },
+                      "text": "{{stats?.data?.users ?? 0 | number}}"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-xs text-base-content/50" },
+                      "text": "회원"
+                    }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "w-px h-10 bg-base-content/8" }
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex flex-col" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-2xl font-bold text-base-content tracking-tight" },
+                      "text": "{{stats?.data?.posts ?? 0 | number}}"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-xs text-base-content/50" },
+                      "text": "게시글"
+                    }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "w-px h-10 bg-base-content/8" }
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex flex-col" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-2xl font-bold text-base-content tracking-tight" },
+                      "text": "{{stats?.data?.comments ?? 0 | number}}"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-xs text-base-content/50" },
+                      "text": "댓글"
+                    }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "w-px h-10 bg-base-content/8" }
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex flex-col" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-2xl font-bold text-base-content tracking-tight" },
+                      "text": "{{stats?.data?.boards ?? 0 | number}}"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": { "className": "text-xs text-base-content/50" },
+                      "text": "게시판"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "comment": "=== 우측(col-span-5): 갤러리 최신글 2x2 ===",
+          "type": "basic",
+          "name": "Div",
+          "props": { "className": "relative lg:col-span-5" },
+          "children": [
+            {
+              "comment": "Case A: 갤러리 글이 있으면 2x2 썸네일",
+              "type": "basic",
+              "name": "Div",
+              "if": "{{gallery_posts.data && gallery_posts.data.data && gallery_posts.data.data.length > 0}}",
+              "props": { "className": "grid grid-cols-2 gap-3" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "iteration": {
+                    "source": "{{(gallery_posts?.data?.data ?? []).slice().sort((a, b) => b.id - a.id).slice(0, 4)}}",
+                    "item_var": "heroPost"
+                  },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Button",
+                      "props": {
+                        "className": "group relative block aspect-square w-full overflow-hidden rounded-2xl bg-base-200 cursor-pointer transition-transform duration-500 hover:scale-[1.02]"
+                      },
+                      "actions": [
+                        {
+                          "type": "click",
+                          "handler": "navigate",
+                          "params": { "path": "/board/gallery/{{heroPost.id}}" }
+                        }
+                      ],
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Img",
+                          "props": {
+                            "src": "/api/plugins/sirsoft-imagetools/post-thumbnail?board=gallery&post_id={{heroPost.id}}&w=400",
+                            "alt": "{{heroPost.title}}",
+                            "loading": "eager",
+                            "decoding": "async",
+                            "className": "absolute inset-0 w-full h-full object-cover"
+                          }
+                        },
+                        {
+                          "comment": "hover 시에만 보이는 하단 그라데이션 + 제목",
+                          "type": "basic",
+                          "name": "Div",
+                          "props": {
+                            "className": "absolute inset-x-0 bottom-0 p-3 pt-10 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          },
+                          "children": [
+                            {
+                              "type": "basic",
+                              "name": "Span",
+                              "props": { "className": "block text-xs font-medium text-white line-clamp-1 text-left drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" },
+                              "text": "{{heroPost.title}}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "comment": "Case B: 갤러리 글 없을 때 fallback",
+              "type": "basic",
+              "name": "Div",
+              "if": "{{!(gallery_posts.data && gallery_posts.data.data && gallery_posts.data.data.length > 0)}}",
+              "props": {
+                "className": "relative flex items-center justify-center aspect-square rounded-3xl bg-base-200 overflow-hidden"
+              },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "absolute top-0 left-0 w-48 h-48 rounded-full bg-primary/20 blur-3xl" }
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "relative z-10 text-center px-6" },
+                  "children": [
+                    { "type": "basic", "name": "Icon", "props": { "name": "image", "className": "w-12 h-12 text-primary mx-auto mb-3" } },
+                    { "type": "basic", "name": "Span", "props": { "className": "block text-lg font-semibold text-base-content mb-1 break-keep" }, "text": "갤러리에 사진을 올려보세요" },
+                    { "type": "basic", "name": "Span", "props": { "className": "block text-sm text-base-content/60 break-keep" }, "text": "커뮤니티에서 먼저 이야기 나눠보세요" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

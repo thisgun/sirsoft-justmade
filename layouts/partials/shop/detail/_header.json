@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "Figma 스타일 상품 헤더: 브랜드, 상품명(대), 메타 라인, 찜하기"
+  },
+  "type": "basic",
+  "name": "Div",
+  "children": [
+    {
+      "comment": "브랜드/카테고리 (Figma의 Apple 아바타 스타일)",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-center gap-2 mb-3" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": { "className": "w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300" },
+          "text": "{{(product.data?.brand_name ?? product.data?.category_name ?? '?')[0]}}"
+        },
+        {
+          "type": "basic",
+          "name": "Span",
+          "props": { "className": "text-sm font-medium text-gray-900 dark:text-white" },
+          "text": "{{product.data?.brand_name ?? product.data?.category_name ?? ''}}"
+        }
+      ]
+    },
+    {
+      "comment": "상품명 (Figma 스타일 큰 제목)",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-start justify-between gap-3" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "children": [
+            {
+              "type": "basic",
+              "name": "H1",
+              "props": { "className": "text-2xl font-bold text-gray-900 dark:text-white leading-tight" },
+              "text": "{{product.data?.name_localized}}"
+            },
+            {
+              "comment": "라벨 뱃지",
+              "type": "basic",
+              "name": "Div",
+              "if": "{{product.data?.labels?.length > 0}}",
+              "props": { "className": "flex items-center gap-1 flex-wrap mt-2" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Span",
+                  "iteration": {
+                    "source": "{{product.data?.labels ?? []}}",
+                    "item_var": "labelItem"
+                  },
+                  "props": {
+                    "className": "inline-block px-2 py-0.5 rounded-md text-xs font-medium text-white",
+                    "style": "background-color: {{labelItem.color ?? '#6B7280'}}"
+                  },
+                  "text": "{{labelItem.name}}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "comment": "찜하기 버튼",
+          "type": "basic",
+          "name": "Button",
+          "props": {
+            "className": "p-2 text-gray-400 hover:text-red-500 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0",
+            "disabled": "{{_local.wishlistLoading}}"
+          },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Icon",
+              "props": {
+                "name": "heart",
+                "iconStyle": "{{(_local.isWishlisted ?? product.data?.is_wishlisted) ? 'solid' : 'regular'}}",
+                "size": "xl",
+                "className": "{{(_local.isWishlisted ?? product.data?.is_wishlisted) ? 'text-red-500' : ''}} transition-colors"
+              }
+            }
+          ],
+          "actions": [
+            {
+              "type": "click",
+              "handler": "conditions",
+              "conditions": [
+                {
+                  "if": "{{!_global.currentUser?.uuid}}",
+                  "then": {
+                    "handler": "toast",
+                    "params": { "type": "warning", "message": "$t:shop.wishlist_login_required" }
+                  }
+                },
+                {
+                  "then": {
+                    "handler": "sequence",
+                    "actions": [
+                      {
+                        "handler": "setState",
+                        "params": {
+                          "target": "local",
+                          "wishlistLoading": true,
+                          "isWishlisted": "{{!(_local.isWishlisted ?? product.data?.is_wishlisted)}}"
+                        }
+                      },
+                      {
+                        "handler": "apiCall",
+                        "auth_mode": "required",
+                        "target": "/api/modules/sirsoft-ecommerce/wishlist/toggle",
+                        "params": { "method": "POST", "body": { "product_id": "{{product.data?.id}}" } },
+                        "onSuccess": [
+                          {
+                            "handler": "setState",
+                            "params": { "target": "local", "wishlistLoading": false, "isWishlisted": "{{response.data.added}}" }
+                          },
+                          { "handler": "refetchDataSource", "params": { "dataSourceId": "product" } },
+                          { "handler": "toast", "params": { "type": "success", "message": "{{response.data.added ? '$t:shop.wishlist_added' : '$t:shop.wishlist_removed'}}" } }
+                        ],
+                        "onError": [
+                          {
+                            "handler": "setState",
+                            "params": { "target": "local", "wishlistLoading": false, "isWishlisted": "{{product.data?.is_wishlisted}}" }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "메타 라인 (Figma의 'Design 파일 • ♡ 20.1k • 사용자 203k' 스타일)",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-center gap-2 mt-3 text-sm text-gray-500 dark:text-gray-400" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Span",
+          "if": "{{product.data?.category_name && product.data?.brand_name}}",
+          "text": "{{product.data?.category_name}}"
+        },
+        {
+          "type": "basic",
+          "name": "Span",
+          "if": "{{product.data?.category_name && product.data?.brand_name}}",
+          "text": "•"
+        },
+        {
+          "type": "basic",
+          "name": "Div",
+          "if": "{{(product.data?.rating_avg ?? 0) > 0}}",
+          "props": { "className": "flex items-center gap-1" },
+          "children": [
+            { "type": "basic", "name": "Icon", "props": { "name": "star", "iconStyle": "solid", "className": "text-yellow-400 w-3.5 h-3.5" } },
+            { "type": "basic", "name": "Span", "text": "{{(product.data?.rating_avg ?? 0).toFixed(1)}}" }
+          ]
+        },
+        {
+          "type": "basic",
+          "name": "Span",
+          "if": "{{(product.data?.rating_avg ?? 0) > 0}}",
+          "text": "•"
+        },
+        {
+          "type": "basic",
+          "name": "Span",
+          "if": "{{(product.data?.review_count ?? 0) > 0}}",
+          "text": "$t:shop.review_count_short|count={{product.data?.review_count ?? 0}}"
+        }
+      ]
+    }
+  ]
+}

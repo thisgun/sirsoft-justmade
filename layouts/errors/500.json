@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "layout_name": "500",
+  "extends": "_user_base",
+  "meta": {
+    "title": "$t:error.500.title",
+    "description": "$t:error.500.description"
+  },
+  "slots": {
+    "content": [
+      {
+        "type": "basic",
+        "name": "Div",
+        "props": {
+          "className": "min-h-[60vh] flex items-center justify-center"
+        },
+        "children": [
+          {
+            "type": "basic",
+            "name": "Div",
+            "props": {
+              "className": "text-center px-4"
+            },
+            "children": [
+              {
+                "type": "basic",
+                "name": "Div",
+                "props": {
+                  "className": "text-8xl font-bold text-base-content/10 mb-4"
+                },
+                "text": "500"
+              },
+              {
+                "type": "basic",
+                "name": "H1",
+                "props": {
+                  "className": "text-2xl font-bold text-base-content mb-2"
+                },
+                "text": "$t:error.500.title"
+              },
+              {
+                "type": "basic",
+                "name": "P",
+                "props": {
+                  "className": "text-base-content/60 mb-8"
+                },
+                "text": "$t:error.500.description"
+              },
+              {
+                "type": "basic",
+                "name": "Button",
+                "props": {
+                  "className": "btn btn-primary gap-2 cursor-pointer"
+                },
+                "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "/" } }],
+                "children": [
+                  {
+                    "type": "basic",
+                    "name": "Icon",
+                    "props": {
+                      "name": "home",
+                      "className": "w-5 h-5"
+                    }
+                  },
+                  {
+                    "type": "basic",
+                    "name": "Span",
+                    "text": "$t:error.500.back_to_home"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

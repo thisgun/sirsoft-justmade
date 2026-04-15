@@ -1,0 +1,220 @@
+{
+  "version": "1.0.0",
+  "layout_name": "503",
+  "extends": "_user_base",
+  "meta": {
+    "title": "$t:error.503.title",
+    "description": "$t:error.503.description",
+    "is_error_layout": true,
+    "error_code": 503
+  },
+  "slots": {
+    "content": [
+      {
+        "type": "basic",
+        "name": "Div",
+        "props": {
+          "className": "min-h-[60vh] flex items-center justify-center"
+        },
+        "children": [
+          {
+            "type": "basic",
+            "name": "Div",
+            "props": {
+              "className": "text-center px-4 max-w-lg"
+            },
+            "children": [
+              {
+                "type": "basic",
+                "name": "Icon",
+                "props": {
+                  "name": "triangle-exclamation",
+                  "className": "w-24 h-24 mx-auto text-warning mb-6"
+                }
+              },
+              {
+                "type": "basic",
+                "name": "Div",
+                "props": {
+                  "className": "text-8xl font-bold text-base-content/10 mb-4"
+                },
+                "text": "503"
+              },
+              {
+                "type": "basic",
+                "name": "H1",
+                "props": {
+                  "className": "text-2xl font-bold text-base-content mb-2"
+                },
+                "text": "$t:error.503.title"
+              },
+              {
+                "type": "basic",
+                "name": "P",
+                "props": {
+                  "className": "text-base-content/60 mb-4"
+                },
+                "text": "$t:error.503.description"
+              },
+              {
+                "id": "dependency_info",
+                "type": "basic",
+                "name": "Div",
+                "if": "{{_global.errorData && ((_global.errorData.modules && _global.errorData.modules.length > 0) || (_global.errorData.plugins && _global.errorData.plugins.length > 0))}}",
+                "props": {
+                  "className": "alert alert-warning p-4 mb-6 text-left"
+                },
+                "children": [
+                  {
+                    "type": "basic",
+                    "name": "P",
+                    "props": {
+                      "className": "text-sm font-medium mb-3"
+                    },
+                    "text": "$t:error.503.unmet_dependencies"
+                  },
+                  {
+                    "id": "modules_list",
+                    "type": "basic",
+                    "name": "Div",
+                    "if": "{{_global.errorData.modules && _global.errorData.modules.length > 0}}",
+                    "props": {
+                      "className": "mb-3"
+                    },
+                    "children": [
+                      {
+                        "type": "basic",
+                        "name": "P",
+                        "props": {
+                          "className": "text-xs font-semibold text-base-content/60 mb-1"
+                        },
+                        "text": "$t:error.503.required_modules"
+                      },
+                      {
+                        "type": "basic",
+                        "name": "Div",
+                        "props": {
+                          "className": "flex flex-wrap gap-2"
+                        },
+                        "children": [
+                          {
+                            "type": "basic",
+                            "name": "Span",
+                            "iteration": {
+                              "source": "_global.errorData.modules",
+                              "item_var": "mod"
+                            },
+                            "props": {
+                              "className": "badge badge-error gap-1"
+                            },
+                            "children": [
+                              {
+                                "type": "basic",
+                                "name": "Icon",
+                                "props": {
+                                  "name": "x-circle",
+                                  "className": "w-3 h-3"
+                                }
+                              },
+                              {
+                                "type": "basic",
+                                "name": "Span",
+                                "text": "{{mod.name}}({{mod.identifier}}) ({{mod.required_version}})"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "plugins_list",
+                    "type": "basic",
+                    "name": "Div",
+                    "if": "{{_global.errorData.plugins && _global.errorData.plugins.length > 0}}",
+                    "children": [
+                      {
+                        "type": "basic",
+                        "name": "P",
+                        "props": {
+                          "className": "text-xs font-semibold text-base-content/60 mb-1"
+                        },
+                        "text": "$t:error.503.required_plugins"
+                      },
+                      {
+                        "type": "basic",
+                        "name": "Div",
+                        "props": {
+                          "className": "flex flex-wrap gap-2"
+                        },
+                        "children": [
+                          {
+                            "type": "basic",
+                            "name": "Span",
+                            "iteration": {
+                              "source": "_global.errorData.plugins",
+                              "item_var": "plug"
+                            },
+                            "props": {
+                              "className": "badge badge-error gap-1"
+                            },
+                            "children": [
+                              {
+                                "type": "basic",
+                                "name": "Icon",
+                                "props": {
+                                  "name": "x-circle",
+                                  "className": "w-3 h-3"
+                                }
+                              },
+                              {
+                                "type": "basic",
+                                "name": "Span",
+                                "text": "{{plug.name}}({{plug.identifier}}) ({{plug.required_version}})"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "name": "P",
+                "props": {
+                  "className": "text-sm text-base-content/50 mb-8"
+                },
+                "text": "$t:error.503.contact_admin"
+              },
+              {
+                "type": "basic",
+                "name": "Button",
+                "props": {
+                  "className": "btn btn-primary gap-2 cursor-pointer"
+                },
+                "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "/" } }],
+                "children": [
+                  {
+                    "type": "basic",
+                    "name": "Icon",
+                    "props": {
+                      "name": "home",
+                      "className": "w-5 h-5"
+                    }
+                  },
+                  {
+                    "type": "basic",
+                    "name": "Span",
+                    "text": "$t:error.503.back_to_home"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

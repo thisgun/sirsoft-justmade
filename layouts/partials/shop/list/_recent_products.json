@@ -1,0 +1,52 @@
+{
+  "meta": { "is_partial": true, "description": "Atelier recent products — compact horizontal strip" },
+  "type": "basic",
+  "name": "Div",
+  "if": "{{recentProducts.data && recentProducts.data.length > 0}}",
+  "props": { "className": "mt-24 pt-16 border-t border-base-300/50" },
+  "children": [
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "mb-8" },
+      "children": [
+        { "type": "basic", "name": "Span", "props": { "className": "text-xs tracking-widest uppercase text-base-content/40 mb-3 block" }, "text": "Recently Viewed" },
+        { "type": "basic", "name": "H2", "props": { "className": "text-2xl font-black tracking-tighter text-base-content" }, "text": "$t:shop.recent_products" }
+      ]
+    },
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-8" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "iteration": { "source": "{{(recentProducts.data ?? []).slice(0, 6)}}", "item_var": "product" },
+          "props": { "className": "contents" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Button",
+              "props": { "className": "flex flex-col items-stretch justify-start text-left w-full cursor-pointer group" },
+              "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products/{{product.id}}" } }],
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "aspect-[4/5] overflow-hidden bg-base-200 mb-3" },
+                  "children": [
+                    { "type": "basic", "name": "Img", "if": "{{product.thumbnail_url}}", "props": { "src": "/api/plugins/sirsoft-imagetools/resize?src={{product.thumbnail_url}}&w=300", "alt": "{{product.name_localized}}", "loading": "lazy", "decoding": "async", "className": "w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" } },
+                    { "type": "basic", "name": "Icon", "if": "{{!product.thumbnail_url}}", "props": { "name": "image", "className": "absolute inset-0 m-auto w-8 h-8 text-base-content/10" } }
+                  ]
+                },
+                { "type": "basic", "name": "Span", "props": { "className": "text-xs font-bold uppercase tracking-wide text-base-content line-clamp-1" }, "text": "{{product.name_localized}}" },
+                { "type": "basic", "name": "Span", "props": { "className": "text-xs text-primary" }, "text": "{{product.selling_price_formatted}}" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

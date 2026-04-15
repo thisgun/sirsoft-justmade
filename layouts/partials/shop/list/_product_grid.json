@@ -1,0 +1,164 @@
+{
+  "meta": { "is_partial": true, "description": "Atelier product grid: first card 2-col feature (16:9), rest 4:5, reference-faithful" },
+  "type": "basic",
+  "name": "Div",
+  "children": [
+    {
+      "comment": "=== Product Grid (reference: grid-cols-3, first item col-span-2) ===",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "iteration": { "source": "{{products?.data?.data ?? []}}", "item_var": "product", "index_var": "pIdx" },
+          "props": { "className": "contents" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Button",
+              "props": {
+                "className": "flex flex-col items-stretch justify-start text-left w-full cursor-pointer group {{pIdx === 0 ? 'md:col-span-2' : ''}}"
+              },
+              "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products/{{product.id}}" } }],
+              "children": [
+                {
+                  "comment": "Image container: first = 16:9, rest = 4:5",
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "{{pIdx === 0 ? 'aspect-video' : 'aspect-[4/5]'}} overflow-hidden bg-base-200 mb-6 relative" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Img",
+                      "if": "{{product.thumbnail_url}}",
+                      "props": {
+                        "src": "/api/plugins/sirsoft-imagetools/resize?src={{product.thumbnail_url}}&w={{pIdx === 0 ? 900 : 500}}",
+                        "alt": "{{product.name_localized}}",
+                        "loading": "{{pIdx < 3 ? 'eager' : 'lazy'}}",
+                        "decoding": "async",
+                        "className": "w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      }
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Icon",
+                      "if": "{{!product.thumbnail_url}}",
+                      "props": { "name": "image", "className": "absolute inset-0 m-auto w-12 h-12 text-base-content/10" }
+                    },
+                    {
+                      "comment": "Hover overlay (subtle tint)",
+                      "type": "basic",
+                      "name": "Div",
+                      "props": { "className": "absolute inset-0 bg-base-content/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" }
+                    },
+                    {
+                      "comment": "Discount badge (top-left, reference: primary-container chip)",
+                      "type": "basic",
+                      "name": "Div",
+                      "if": "{{product.discount_rate > 0}}",
+                      "props": { "className": "absolute top-4 left-4 text-xs tracking-widest uppercase bg-primary/10 text-primary px-3 py-1 font-medium" },
+                      "text": "{{product.discount_rate}}% off"
+                    }
+                  ]
+                },
+                {
+                  "comment": "Product info: name + price (reference style)",
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex justify-between items-start gap-4" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Div",
+                      "children": [
+                        { "type": "basic", "name": "H3", "props": { "className": "{{pIdx === 0 ? 'text-xl font-bold tracking-tight mb-1' : 'text-sm font-bold tracking-wide uppercase mb-1'}} text-base-content" }, "text": "{{product.name_localized}}" },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "if": "{{product.brand_name || product.category_name}}",
+                          "props": { "className": "text-sm text-base-content/50" },
+                          "text": "{{product.brand_name ?? product.category_name ?? ''}}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Div",
+                      "props": { "className": "text-right shrink-0" },
+                      "children": [
+                        { "type": "basic", "name": "Span", "props": { "className": "{{pIdx === 0 ? 'text-sm' : 'text-xs'}} font-semibold text-primary" }, "text": "{{product.selling_price_formatted}}" },
+                        { "type": "basic", "name": "Span", "if": "{{product.discount_rate > 0}}", "props": { "className": "block text-xs text-base-content/30 line-through" }, "text": "{{product.list_price_formatted}}" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "=== Empty state ===",
+      "type": "basic",
+      "name": "Div",
+      "if": "{{(products?.data?.data ?? []).length === 0}}",
+      "props": { "className": "flex flex-col items-center justify-center py-32 px-4" },
+      "children": [
+        { "type": "basic", "name": "Div", "props": { "className": "w-20 h-20 rounded-full bg-base-200 flex items-center justify-center mb-5" }, "children": [{ "type": "basic", "name": "Icon", "props": { "name": "search", "className": "w-8 h-8 text-base-content/30" } }] },
+        { "type": "basic", "name": "P", "props": { "className": "text-lg font-medium text-base-content mb-1" }, "text": "$t:shop.no_products" },
+        { "type": "basic", "name": "P", "props": { "className": "text-sm text-base-content/40" }, "text": "$t:shop.no_search_results" }
+      ]
+    },
+    {
+      "comment": "=== Pagination (reference: page numbers with primary underline) ===",
+      "type": "basic",
+      "name": "Div",
+      "if": "{{(products?.data?.pagination?.last_page ?? 1) > 1}}",
+      "props": { "className": "mt-24 pt-12 border-t border-base-300/50 flex justify-between items-center" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Button",
+          "props": { "className": "flex items-center gap-2 text-xs uppercase tracking-widest text-base-content/40 hover:text-primary transition-colors cursor-pointer {{(products?.data?.pagination?.current_page ?? 1) <= 1 ? 'opacity-30 pointer-events-none' : ''}}", "disabled": "{{(products?.data?.pagination?.current_page ?? 1) <= 1}}" },
+          "children": [
+            { "type": "basic", "name": "Icon", "props": { "name": "arrow-left", "className": "w-3.5 h-3.5" } },
+            { "type": "basic", "name": "Span", "text": "Previous" }
+          ],
+          "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{route.path}}", "mergeQuery": true, "query": { "page": "{{(products?.data?.pagination?.current_page ?? 1) - 1}}" } } }]
+        },
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": { "className": "flex gap-6" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Span",
+              "props": { "className": "text-xs font-bold text-primary border-b border-primary pb-1" },
+              "text": "{{products?.data?.pagination?.current_page ?? 1 | padStart:2}}"
+            },
+            {
+              "type": "basic",
+              "name": "Span",
+              "props": { "className": "text-xs text-base-content/40" },
+              "text": "/ {{products?.data?.pagination?.last_page ?? 1 | padStart:2}}"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "name": "Button",
+          "props": { "className": "flex items-center gap-2 text-xs uppercase tracking-widest text-base-content/40 hover:text-primary transition-colors cursor-pointer {{(products?.data?.pagination?.current_page ?? 1) >= (products?.data?.pagination?.last_page ?? 1) ? 'opacity-30 pointer-events-none' : ''}}", "disabled": "{{(products?.data?.pagination?.current_page ?? 1) >= (products?.data?.pagination?.last_page ?? 1)}}" },
+          "children": [
+            { "type": "basic", "name": "Span", "text": "Next" },
+            { "type": "basic", "name": "Icon", "props": { "name": "arrow-right", "className": "w-3.5 h-3.5" } }
+          ],
+          "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{route.path}}", "mergeQuery": true, "query": { "page": "{{(products?.data?.pagination?.current_page ?? 1) + 1}}" } } }]
+        }
+      ]
+    }
+  ]
+}

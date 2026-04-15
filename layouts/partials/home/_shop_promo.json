@@ -1,0 +1,27 @@
+{
+  "meta": { "is_partial": true, "description": "Atelier shop promo — warm surface-container CTA" },
+  "type": "basic",
+  "name": "Button",
+  "props": {
+    "className": "flex flex-col items-stretch justify-start text-left w-full bg-base-100 rounded-2xl p-6 hover:bg-base-200/60 transition-colors cursor-pointer group shadow-sm"
+  },
+  "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products" } }],
+  "children": [
+    {
+      "type": "basic",
+      "name": "Span",
+      "props": { "className": "text-xs tracking-widest uppercase text-base-content/40 mb-2 block" },
+      "text": "Atelier"
+    },
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-center justify-between" },
+      "children": [
+        { "type": "basic", "name": "Span", "props": { "className": "text-lg font-bold tracking-tight text-base-content" }, "text": "$t:home.shop" },
+        { "type": "basic", "name": "Icon", "props": { "name": "arrow-right", "className": "w-4 h-4 text-primary transition-transform duration-300 group-hover:translate-x-1" } }
+      ]
+    },
+    { "type": "basic", "name": "P", "props": { "className": "text-xs text-base-content/50 mt-2" }, "text": "$t:home.shop_description" }
+  ]
+}

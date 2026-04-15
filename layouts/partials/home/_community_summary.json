@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "커뮤니티 요약 - 통계 + 쇼핑몰 + 가이드 (보더 없는 클린 스타일)"
+  },
+  "type": "basic",
+  "name": "Div",
+  "props": {
+    "className": "flex flex-col gap-4 h-full"
+  },
+  "children": [
+    {
+      "comment": "=== 통계 미니 카드 (2x2 그리드) ===",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "bg-base-100 rounded-2xl p-5 shadow-sm" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": { "className": "grid grid-cols-2 gap-4" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Div",
+              "props": { "className": "flex items-center gap-3" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "w-9 h-9 rounded-xl flex items-center justify-center bg-orange-500/8" },
+                  "children": [
+                    { "type": "basic", "name": "Icon", "props": { "name": "users", "className": "w-4 h-4 text-orange-500" } }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "children": [
+                    { "type": "basic", "name": "Span", "props": { "className": "text-lg font-bold text-base-content block leading-tight" }, "text": "{{stats?.data?.users ?? 0 | number}}" },
+                    { "type": "basic", "name": "Span", "props": { "className": "text-xs text-base-content/35" }, "text": "$t:home.stats.members" }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "basic",
+              "name": "Div",
+              "props": { "className": "flex items-center gap-3" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "w-9 h-9 rounded-xl flex items-center justify-center bg-primary/8" },
+                  "children": [
+                    { "type": "basic", "name": "Icon", "props": { "name": "file-alt", "className": "w-4 h-4 text-primary" } }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "children": [
+                    { "type": "basic", "name": "Span", "props": { "className": "text-lg font-bold text-base-content block leading-tight" }, "text": "{{stats?.data?.posts ?? 0 | number}}" },
+                    { "type": "basic", "name": "Span", "props": { "className": "text-xs text-base-content/35" }, "text": "$t:home.stats.posts" }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "basic",
+              "name": "Div",
+              "props": { "className": "flex items-center gap-3" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "w-9 h-9 rounded-xl flex items-center justify-center bg-secondary/8" },
+                  "children": [
+                    { "type": "basic", "name": "Icon", "props": { "name": "comments", "className": "w-4 h-4 text-secondary" } }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "children": [
+                    { "type": "basic", "name": "Span", "props": { "className": "text-lg font-bold text-base-content block leading-tight" }, "text": "{{stats?.data?.comments ?? 0 | number}}" },
+                    { "type": "basic", "name": "Span", "props": { "className": "text-xs text-base-content/35" }, "text": "$t:home.stats.comments" }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "basic",
+              "name": "Div",
+              "props": { "className": "flex items-center gap-3" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "w-9 h-9 rounded-xl flex items-center justify-center bg-success/8" },
+                  "children": [
+                    { "type": "basic", "name": "Icon", "props": { "name": "chart-line", "className": "w-4 h-4 text-success" } }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "children": [
+                    { "type": "basic", "name": "Span", "props": { "className": "text-lg font-bold text-base-content block leading-tight" }, "text": "{{stats?.data?.boards ?? 0 | number}}" },
+                    { "type": "basic", "name": "Span", "props": { "className": "text-xs text-base-content/35" }, "text": "$t:home.stats.boards" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "=== 쇼핑몰 바로가기 ===",
+      "partial": "partials/home/_shop_promo.json"
+    },
+    {
+      "comment": "=== 커뮤니티 가이드 ===",
+      "partial": "partials/home/_community_guide.json"
+    }
+  ]
+}

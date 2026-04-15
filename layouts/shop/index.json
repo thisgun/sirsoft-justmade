@@ -1,0 +1,165 @@
+{
+    "version": "1.0.0",
+    "layout_name": "shop/index",
+    "permissions": [],
+    "extends": "_user_base",
+    "meta": {
+        "seo": {
+            "enabled": true,
+            "data_sources": ["products", "categories"],
+            "page_type": "category",
+            "toggle_setting": "$module_settings:sirsoft-ecommerce:seo.seo_category",
+            "vars": {
+                "commerce_name": "$module_settings:sirsoft-ecommerce:basic_info.shop_name",
+                "site_name": "$core_settings:general.site_name",
+                "shopBase": "$module_settings:sirsoft-ecommerce:basic_info.route_path"
+            },
+            "priority": 0.7,
+            "changefreq": "daily",
+            "og": { "type": "website" },
+            "structured_data": { "@type": "ItemList", "name": "$t:user.shop.index_title" }
+        }
+    },
+    "init_actions": [
+        {
+            "handler": "loadFromLocalStorage",
+            "params": { "key": "recentProductIds", "defaultValue": [] },
+            "resultTo": { "target": "_global", "key": "recentProductIds" }
+        }
+    ],
+    "errorHandling": {
+        "401": { "handler": "setState", "params": { "target": "local", "productAccessDenied": true } },
+        "403": { "handler": "setState", "params": { "target": "local", "productAccessDenied": true } }
+    },
+    "data_sources": [
+        { "id": "categories", "type": "api", "endpoint": "/api/modules/sirsoft-ecommerce/categories", "method": "GET", "auto_fetch": true, "loading_strategy": "progressive", "fallback": { "data": [] } },
+        { "id": "products", "type": "api", "endpoint": "/api/modules/sirsoft-ecommerce/products", "method": "GET", "auth_mode": "optional", "params": { "page": "{{query.page ?? 1}}", "per_page": 12, "category_id": "{{query.category ?? ''}}", "sort": "{{query.sort ?? 'latest'}}", "search": "{{query.keyword ?? ''}}" }, "auto_fetch": true, "loading_strategy": "progressive", "fallback": { "data": [], "meta": { "current_page": 1, "last_page": 1, "per_page": 12, "total": 0 } } },
+        { "id": "recentProducts", "type": "api", "endpoint": "/api/modules/sirsoft-ecommerce/products/recent", "method": "GET", "auth_mode": "optional", "params": { "ids": "{{(_global.recentProductIds ?? []).join(',')}}" }, "auto_fetch": true, "loading_strategy": "progressive", "fallback": { "data": [] } },
+        { "id": "popularProducts", "type": "api", "endpoint": "/api/modules/sirsoft-ecommerce/products/popular?limit=8", "method": "GET", "auth_mode": "optional", "auto_fetch": true, "loading_strategy": "progressive", "fallback": { "data": [] } },
+        { "id": "newProducts", "type": "api", "endpoint": "/api/modules/sirsoft-ecommerce/products/new?limit=8", "method": "GET", "auth_mode": "optional", "auto_fetch": true, "loading_strategy": "progressive", "fallback": { "data": [] } }
+    ],
+    "slots": {
+        "content": [
+            {
+                "type": "layout",
+                "name": "Container",
+                "props": { "className": "pt-10 pb-24" },
+                "children": [
+                    {
+                        "comment": "=== Editorial Header (reference: headline left + count/sort right) ===",
+                        "type": "basic",
+                        "name": "Div",
+                        "props": { "className": "flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-8" },
+                        "children": [
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "props": { "className": "max-w-2xl" },
+                                "children": [
+                                    { "type": "basic", "name": "Span", "props": { "className": "text-xs tracking-widest uppercase text-base-content/40 mb-4 block" }, "text": "$t:shop.title" },
+                                    { "type": "basic", "name": "H1", "props": { "className": "text-5xl lg:text-7xl font-black tracking-tighter leading-none mb-6 text-base-content" }, "text": "$t:shop.title" },
+                                    { "type": "basic", "name": "P", "props": { "className": "text-base-content/60 text-lg max-w-md break-keep" }, "text": "$t:shop.description" }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "props": { "className": "flex flex-col items-end gap-4" },
+                                "children": [
+                                    { "type": "basic", "name": "Span", "props": { "className": "text-xs uppercase text-base-content/40" }, "text": "{{products?.data?.pagination?.total ?? 0}} Items" },
+                                    { "partial": "partials/shop/list/_search_filter_bar.json" }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "comment": "=== Access Denied Banner ===",
+                        "type": "basic",
+                        "name": "Div",
+                        "if": "{{_local.productAccessDenied === true}}",
+                        "props": { "className": "mb-8 p-5 bg-warning/10 rounded-sm flex items-center gap-3" },
+                        "children": [
+                            { "type": "basic", "name": "Icon", "props": { "name": "triangle-exclamation", "className": "text-warning shrink-0" } },
+                            { "type": "basic", "name": "Span", "props": { "className": "text-sm text-base-content/80" }, "text": "$t:sirsoft-ecommerce.shop.product_access_denied" }
+                        ]
+                    },
+                    {
+                        "comment": "=== Main Layout: Sidebar Filters + Product Grid ===",
+                        "type": "basic",
+                        "name": "Div",
+                        "props": { "className": "flex flex-col lg:flex-row gap-16" },
+                        "children": [
+                            {
+                                "comment": "=== Sidebar: Category Filters (reference style) ===",
+                                "type": "basic",
+                                "name": "Div",
+                                "props": { "className": "w-full lg:w-56 shrink-0" },
+                                "children": [
+                                    {
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": { "className": "lg:sticky lg:top-24 space-y-10" },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": { "className": "space-y-5" },
+                                                "children": [
+                                                    { "type": "basic", "name": "H4", "props": { "className": "text-xs font-bold uppercase tracking-widest border-b border-base-300/50 pb-2 text-base-content" }, "text": "Category" },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Div",
+                                                        "props": { "className": "space-y-3" },
+                                                        "children": [
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Button",
+                                                                "props": { "className": "flex justify-between items-center w-full text-left cursor-pointer group" },
+                                                                "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products", "query": {} } }],
+                                                                "children": [
+                                                                    { "type": "basic", "name": "Span", "props": { "className": "{{!query.category ? 'text-xs uppercase text-primary font-bold' : 'text-xs uppercase text-base-content/80 group-hover:text-primary transition-colors'}}" }, "text": "$t:shop.category.all" }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Div",
+                                                                "iteration": { "source": "{{categories?.data ?? []}}", "item_var": "cat" },
+                                                                "children": [
+                                                                    {
+                                                                        "type": "basic",
+                                                                        "name": "Button",
+                                                                        "props": { "className": "flex justify-between items-center w-full text-left cursor-pointer group py-0.5" },
+                                                                        "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/category/{{cat?.slug}}" } }],
+                                                                        "children": [
+                                                                            { "type": "basic", "name": "Span", "props": { "className": "{{query.category == cat?.id ? 'text-xs uppercase text-primary font-bold' : 'text-xs uppercase text-base-content/80 group-hover:text-primary transition-colors'}}" }, "text": "{{cat?.name_localized}}" }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "comment": "=== Product Grid Area ===",
+                                "type": "basic",
+                                "name": "Div",
+                                "props": { "className": "flex-1 min-w-0" },
+                                "children": [
+                                    { "partial": "partials/shop/list/_product_grid.json" },
+                                    { "partial": "partials/shop/list/_recent_products.json" },
+                                    { "partial": "partials/shop/list/_popular_products.json" },
+                                    { "partial": "partials/shop/list/_new_products.json" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

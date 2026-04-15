@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "공지 배너 - 최신 공지사항 1건 표시"
+  },
+  "type": "basic",
+  "name": "Div",
+  "if": "{{notice_posts.data && notice_posts.data.data && notice_posts.data.data.length > 0}}",
+  "props": {
+    "className": "card bg-primary/5 border border-primary/20 px-4 py-3"
+  },
+  "children": [
+    {
+      "type": "basic",
+      "name": "Button",
+      "props": { "className": "w-full flex items-center gap-3 cursor-pointer group" },
+      "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "/board/notice/{{notice_posts.data.data[0].id}}" } }],
+      "children": [
+        { "type": "basic", "name": "Icon", "props": { "name": "megaphone", "className": "w-5 h-5 text-primary shrink-0" } },
+        { "type": "basic", "name": "Span", "props": { "className": "badge badge-primary badge-sm shrink-0" }, "text": "$t:board.notice" },
+        { "type": "basic", "name": "Span", "props": { "className": "text-sm font-medium text-base-content line-clamp-1 text-left group-hover:text-primary transition-colors" }, "text": "{{notice_posts.data.data[0].title}}" },
+        { "type": "basic", "name": "Span", "props": { "className": "text-xs text-base-content/50 shrink-0 ml-auto" }, "text": "{{notice_posts.data.data[0].created_at_formatted ?? ''}}" },
+        { "type": "basic", "name": "Icon", "props": { "name": "chevron-right", "className": "w-4 h-4 text-base-content/40 shrink-0" } }
+      ]
+    }
+  ]
+}

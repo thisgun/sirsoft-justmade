@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "게시글 첨부파일 - 이미지 썸네일 그리드 + 모달"
+  },
+  "type": "basic",
+  "name": "Div",
+  "if": "{{(post?.data?.attachments?.length ?? 0) > 0}}",
+  "props": {
+    "className": "mb-6 border-b border-gray-200 dark:border-gray-700 px-6 pt-4"
+  },
+  "children": [
+    {
+      "comment": "첨부파일 토글 헤더",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-center justify-between cursor-pointer mb-3" },
+      "actions": [
+        {
+          "type": "click",
+          "handler": "setState",
+          "params": { "target": "local", "showAttachments": "{{_local.showAttachments === false ? true : false}}" }
+        }
+      ],
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": { "className": "flex items-center gap-2" },
+          "children": [
+            { "type": "composite", "name": "Icon", "props": { "name": "paperclip", "size": "lg", "className": "text-gray-600 dark:text-gray-400" } },
+            { "type": "basic", "name": "H3", "props": { "className": "text-sm font-semibold text-gray-900 dark:text-white" }, "text": "$t:board.attachments.title" },
+            { "type": "basic", "name": "Span", "props": { "className": "ml-1 px-1.5 py-0.5 text-xs font-medium bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded" }, "text": "{{post?.data?.attachments?.length ?? 0}}" }
+          ]
+        },
+        { "type": "composite", "name": "Icon", "props": { "name": "{{_local.showAttachments === false ? 'chevron-down' : 'chevron-up'}}", "size": "lg", "className": "text-gray-500 dark:text-gray-400" } }
+      ]
+    },
+    {
+      "comment": "=== 이미지 썸네일 그리드 ===",
+      "type": "basic",
+      "name": "Div",
+      "if": "{{_local.showAttachments !== false}}",
+      "props": { "className": "flex flex-col gap-3 mb-4" },
+      "children": [
+        {
+          "comment": "iteration 래퍼 - contents로 그리드에 영향 없음",
+          "type": "basic",
+          "name": "Div",
+          "iteration": { "source": "{{post?.data?.attachments ?? []}}", "item_var": "attachment" },
+          "props": { "className": "contents" },
+          "children": [
+            {
+              "comment": "이미지 썸네일 카드",
+              "type": "basic",
+              "name": "Div",
+              "if": "{{attachment?.is_image}}",
+              "props": { "className": "relative group cursor-pointer rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 w-[640px] max-w-full" },
+              "actions": [
+                {
+                  "type": "click",
+                  "handler": "openImageViewer",
+                  "params": {
+                    "url": "{{attachment?.preview_url}}",
+                    "filename": "{{attachment?.original_filename}}"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Img",
+                  "props": { "src": "/api/plugins/sirsoft-imagetools/resize?src={{attachment?.preview_url}}&w=640", "data-fallback": "{{attachment?.preview_url}}", "alt": "{{attachment?.original_filename}}", "className": "w-full h-full object-cover group-hover:scale-105 transition-transform" }
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center" },
+                  "children": [
+                    { "type": "composite", "name": "Icon", "props": { "name": "search", "className": "text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity" } }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "=== 비이미지 첨부파일 리스트 ===",
+      "type": "basic",
+      "name": "Div",
+      "if": "{{_local.showAttachments !== false}}",
+      "props": { "className": "space-y-2 mb-2" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "iteration": { "source": "{{post?.data?.attachments ?? []}}", "item_var": "attachment" },
+          "props": { "className": "contents" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "A",
+              "if": "{{!attachment?.is_image && post?.data?.abilities?.can_download === true}}",
+              "props": {
+                "href": "{{attachment?.download_url}}",
+                "className": "group flex items-center gap-3 p-3 bg-base-100 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer no-underline"
+              },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex-shrink-0 w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center" },
+                  "children": [
+                    { "type": "composite", "name": "Icon", "props": { "name": "file", "className": "text-2xl text-gray-400 dark:text-gray-500" } }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex-1 min-w-0" },
+                  "children": [
+                    { "type": "basic", "name": "Div", "props": { "className": "text-sm font-medium text-gray-900 dark:text-white truncate mb-0.5" }, "text": "{{attachment?.original_filename}}" },
+                    { "type": "basic", "name": "Div", "props": { "className": "text-xs text-gray-500 dark:text-gray-400" }, "text": "{{attachment?.size_formatted}}" }
+                  ]
+                },
+                { "type": "composite", "name": "Icon", "props": { "name": "download", "size": "lg", "className": "text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" } }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

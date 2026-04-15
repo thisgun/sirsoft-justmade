@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "갤러리 섹션 - 에디토리얼 스타일, 보더 없는 카드"
+  },
+  "type": "basic",
+  "name": "Div",
+  "if": "{{gallery_posts.data && gallery_posts.data.data && gallery_posts.data.data.length > 0}}",
+  "children": [
+    {
+      "comment": "=== 섹션 헤더 (에디토리얼) ===",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-end justify-between mb-8" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "children": [
+            { "type": "basic", "name": "Span", "props": { "className": "text-editorial-eyebrow block mb-2 text-base-content" }, "text": "Gallery" },
+            { "type": "basic", "name": "H2", "props": { "className": "text-2xl lg:text-3xl font-black tracking-tight text-base-content" }, "text": "$t:home.gallery" }
+          ]
+        },
+        {
+          "type": "basic",
+          "name": "Button",
+          "props": { "className": "flex items-center gap-2 text-xs uppercase tracking-widest text-base-content/40 hover:text-primary transition-colors cursor-pointer" },
+          "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "/board/gallery" } }],
+          "children": [
+            { "type": "basic", "name": "Span", "text": "$t:common.more" },
+            { "type": "basic", "name": "Icon", "props": { "name": "arrow-right", "className": "w-3.5 h-3.5" } }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "=== 갤러리 카드 그리드 ===",
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "grid grid-cols-4 gap-5" },
+      "responsive": {
+        "portable": { "props": { "className": "grid grid-cols-2 gap-4" } }
+      },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "iteration": { "source": "{{(gallery_posts?.data?.data ?? []).slice().sort((a, b) => b.id - a.id).slice(0, 4)}}", "item_var": "post" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Button",
+              "props": { "className": "block w-full text-left cursor-pointer group" },
+              "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "/board/gallery/{{post.id}}" } }],
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "aspect-[4/3] bg-base-200 overflow-hidden rounded-xl mb-3" },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Img",
+                      "props": { "src": "/api/plugins/sirsoft-imagetools/post-thumbnail?board=gallery&post_id={{post.id}}&w=400", "alt": "{{post.title}}", "className": "w-full h-full object-cover img-zoom" }
+                    }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "children": [
+                    { "type": "basic", "name": "Span", "props": { "className": "text-sm font-medium text-base-content line-clamp-1 block mb-1" }, "text": "{{post.title}}" },
+                    {
+                      "type": "basic",
+                      "name": "Div",
+                      "props": { "className": "flex items-center gap-2 text-xs text-base-content/40" },
+                      "children": [
+                        { "type": "basic", "name": "Span", "text": "{{post.author.name ?? ''}}" },
+                        { "type": "basic", "name": "Span", "text": "{{post.created_at_formatted ?? ''}}" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

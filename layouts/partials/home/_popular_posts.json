@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "인기 게시글 카드 - 보더 없는 클린 스타일"
+  },
+  "type": "basic",
+  "name": "Div",
+  "props": {
+    "className": "bg-base-100 rounded-2xl p-6 h-full flex flex-col shadow-sm"
+  },
+  "children": [
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-center justify-between mb-5" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "H3",
+          "props": { "className": "text-lg font-bold text-base-content flex items-center gap-2" },
+          "children": [
+            { "type": "basic", "name": "Icon", "props": { "name": "fire", "className": "w-5 h-5 text-orange-500" } },
+            { "type": "basic", "name": "Span", "text": "$t:nav.popular" }
+          ]
+        },
+        {
+          "type": "basic",
+          "name": "Button",
+          "props": { "className": "text-xs text-base-content/40 hover:text-primary flex items-center gap-1 cursor-pointer transition-colors" },
+          "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "/boards/popular" } }],
+          "children": [
+            { "type": "basic", "name": "Span", "text": "$t:common.more" },
+            { "type": "basic", "name": "Icon", "props": { "name": "arrow-right", "className": "w-3.5 h-3.5" } }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "basic",
+      "name": "Div",
+      "if": "{{popular_posts.data && popular_posts.data.length > 0}}",
+      "props": { "className": "space-y-0.5 flex-1" },
+      "iteration": { "source": "{{popular_posts.data ?? []}}", "item_var": "post" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Button",
+          "props": { "className": "block w-full text-left hover:bg-base-200/60 rounded-lg py-2.5 px-2 transition-colors cursor-pointer" },
+          "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "/board/{{post.board_slug}}/{{post.id}}" } }],
+          "children": [
+            {
+              "type": "basic",
+              "name": "Div",
+              "props": { "className": "flex items-center justify-between gap-2 text-xs" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": { "className": "flex items-center gap-2 flex-1 min-w-0" },
+                  "children": [
+                    { "type": "basic", "name": "Span", "props": { "className": "text-primary/70 shrink-0 text-xs" }, "text": "{{post.board_name}}" },
+                    { "type": "basic", "name": "Span", "props": { "className": "text-sm font-medium text-base-content text-left line-clamp-1" }, "text": "{{post.title}}" },
+                    { "type": "basic", "name": "Span", "if": "{{post.comment_count > 0}}", "props": { "className": "text-xs text-primary/50 shrink-0" }, "text": "[{{post.comment_count}}]" }
+                  ]
+                },
+                {
+                  "type": "basic",
+                  "name": "Span",
+                  "props": { "className": "text-xs text-base-content/30 shrink-0", "title": "{{post.created_at ?? ''}}" },
+                  "text": "{{post.created_at_formatted ?? ''}}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "basic",
+      "name": "Div",
+      "if": "{{!popular_posts.data || popular_posts.data.length === 0}}",
+      "props": { "className": "text-center py-8 text-base-content/30 flex-grow flex flex-col items-center justify-center" },
+      "children": [
+        { "type": "basic", "name": "Icon", "props": { "name": "inbox", "className": "w-8 h-8 mx-auto mb-2 opacity-50" } },
+        { "type": "basic", "name": "P", "props": { "className": "text-sm" }, "text": "$t:home.no_posts" }
+      ]
+    }
+  ]
+}

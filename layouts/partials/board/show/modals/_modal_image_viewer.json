@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "is_partial": true,
+    "description": "이미지 뷰어 모달"
+  },
+  "id": "image_viewer_modal",
+  "type": "composite",
+  "name": "Modal",
+  "props": {
+    "id": "image_viewer_modal",
+    "title": "{{_global.imageViewer.filename ?? ''}}",
+    "size": "full"
+  },
+  "children": [
+    {
+      "type": "basic",
+      "name": "Div",
+      "props": { "className": "flex items-center justify-center w-full" },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Img",
+          "props": {
+            "src": "{{_global.imageViewer.url ?? ''}}",
+            "alt": "{{_global.imageViewer.filename ?? ''}}",
+            "className": "max-w-full max-h-[85vh] object-contain"
+          }
+        }
+      ]
+    }
+  ]
+}

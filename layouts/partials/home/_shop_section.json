@@ -1,0 +1,87 @@
+{
+  "meta": { "is_partial": true, "description": "Atelier home new products — editorial layout with hover depth" },
+  "type": "basic",
+  "name": "Div",
+  "if": "{{new_products.data && new_products.data.length > 0}}",
+  "props": { "className": "bg-base-200/50 rounded-2xl py-8 lg:py-10" },
+  "children": [
+    {
+      "type": "layout",
+      "name": "Container",
+      "props": { "className": "px-4" },
+      "responsive": {
+        "tablet": { "props": { "className": "px-6" } }
+      },
+      "children": [
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": { "className": "flex justify-between items-end mb-10" },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Div",
+              "children": [
+                { "type": "basic", "name": "Span", "props": { "className": "text-editorial-eyebrow block mb-3 text-base-content" }, "text": "New Arrivals" },
+                { "type": "basic", "name": "H2", "props": { "className": "text-3xl lg:text-4xl font-black tracking-tighter text-base-content" }, "text": "$t:home.new_products" }
+              ]
+            },
+            {
+              "type": "basic",
+              "name": "Button",
+              "props": { "className": "flex items-center gap-2 text-xs uppercase tracking-widest text-base-content/40 hover:text-primary transition-colors cursor-pointer" },
+              "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products" } }],
+              "children": [
+                { "type": "basic", "name": "Span", "text": "$t:common.more" },
+                { "type": "basic", "name": "Icon", "props": { "name": "arrow-right", "className": "w-3.5 h-3.5" } }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": { "className": "grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8" },
+          "responsive": { "portable": { "props": { "className": "grid grid-cols-2 gap-4" } } },
+          "children": [
+            {
+              "type": "basic",
+              "name": "Div",
+              "iteration": { "source": "{{(new_products.data ?? []).slice(0, 4)}}", "item_var": "product" },
+              "props": { "className": "contents" },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Button",
+                  "props": { "className": "flex flex-col items-stretch justify-start text-left w-full cursor-pointer group" },
+                  "actions": [{ "type": "click", "handler": "navigate", "params": { "path": "{{_global.shopBase}}/products/{{product.id}}" } }],
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Div",
+                      "props": { "className": "aspect-[4/5] overflow-hidden bg-base-100 rounded-xl mb-4 relative" },
+                      "children": [
+                        { "type": "basic", "name": "Img", "if": "{{product.thumbnail_url}}", "props": { "src": "/api/plugins/sirsoft-imagetools/resize?src={{product.thumbnail_url}}&w=400", "alt": "{{product.name_localized}}", "loading": "lazy", "decoding": "async", "className": "w-full h-full object-cover img-zoom" } },
+                        { "type": "basic", "name": "Icon", "if": "{{!product.thumbnail_url}}", "props": { "name": "image", "className": "absolute inset-0 m-auto w-10 h-10 text-base-content/10" } }
+                      ]
+                    },
+                    { "type": "basic", "name": "Span", "props": { "className": "text-sm font-semibold tracking-wide text-base-content line-clamp-1 mb-1.5" }, "text": "{{product.name_localized}}" },
+                    {
+                      "type": "basic",
+                      "name": "Div",
+                      "props": { "className": "flex items-center gap-2" },
+                      "children": [
+                        { "type": "basic", "name": "Span", "props": { "className": "text-sm font-bold text-primary" }, "text": "{{product.selling_price_formatted}}" },
+                        { "type": "basic", "name": "Span", "if": "{{product.discount_rate > 0}}", "props": { "className": "text-xs text-base-content/30 line-through" }, "text": "{{product.list_price_formatted}}" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
