@@ -14,7 +14,7 @@
                 "limit": 20
             },
             "auto_fetch": true,
-            "auth_required": true,
+            "auth_required": false,
             "refetchOnMount": true,
             "errorHandling": {
                 "403": {

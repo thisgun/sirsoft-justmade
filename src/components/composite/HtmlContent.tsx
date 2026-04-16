@@ -92,29 +92,7 @@ export const HtmlContent: React.FC<HtmlContentProps> = ({
     setGalleryOpen(false);
   }, []);
 
-  // 빈 값 처리
-  if (!actualContent || actualContent.trim() === '') {
-    return null;
-  }
-
-  // isHtml=false: 일반 텍스트 렌더링
-  if (!isHtml) {
-    const textClasses = `
-      whitespace-pre-wrap
-      text-gray-900 dark:text-gray-100
-      font-sans
-      ${className}
-    `.trim().replace(/\s+/g, ' ');
-
-    return (
-      <Div className={textClasses}>
-        {actualContent}
-      </Div>
-    );
-  }
-
-  // isHtml=true: HTML 렌더링 (기존 로직)
-  // 기본 DOMPurify 설정
+  // 기본 DOMPurify 설정 (훅보다 먼저 정의하되, 훅 이후에 사용)
   const defaultConfig: any = {
     ALLOWED_TAGS: [
       'p', 'br', 'strong', 'em', 'u', 's', 'strike', 'del', 'ins', 'mark',
@@ -138,6 +116,7 @@ export const HtmlContent: React.FC<HtmlContentProps> = ({
 
   // sanitize된 HTML을 메모이제이션
   const sanitizedHtml = useMemo(() => {
+    if (!isHtml || !actualContent || typeof actualContent !== 'string') return '';
     const config = purifyConfig || defaultConfig;
     const cleaned = DOMPurify.sanitize(actualContent, config) as unknown as string;
 
@@ -258,6 +237,27 @@ export const HtmlContent: React.FC<HtmlContentProps> = ({
     prose-td:px-4 prose-td:py-2
     ${className}
   `.trim().replace(/\s+/g, ' ');
+
+  // 빈 값 처리
+  if (!actualContent || (typeof actualContent === 'string' && actualContent.trim() === '')) {
+    return null;
+  }
+
+  // isHtml=false: 일반 텍스트 렌더링
+  if (!isHtml) {
+    const textClasses = `
+      whitespace-pre-wrap
+      text-gray-900 dark:text-gray-100
+      font-sans
+      ${className}
+    `.trim().replace(/\s+/g, ' ');
+
+    return (
+      <Div className={textClasses}>
+        {typeof actualContent === 'string' ? actualContent : String(actualContent)}
+      </Div>
+    );
+  }
 
   return (
     <>

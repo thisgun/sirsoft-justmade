@@ -569,7 +569,7 @@
           "name": "HtmlEditor",
           "props": {
             "content": "{{_local.form?.content ?? ''}}",
-            "isHtml": "{{(_local.form?.content_mode ?? (_global.templateSettings?.editor_default_html ? 'html' : 'text')) === 'html'}}",
+            "isHtml": "{{_local.form?.content_mode === 'html'}}",
             "rows": 15,
             "placeholder": "$t:board.form.content_placeholder",
             "label": "$t:board.form.content",
@@ -577,6 +577,21 @@
             "name": "content",
             "boardSlug": "{{route.slug ?? ''}}",
             "imageUploadPolicy": "{{_global.templateSettings?.editor_image_upload ?? 'member'}}"
+          },
+          "lifecycle": {
+            "onMount": [
+              {
+                "comment": "새 글 작성 시 HTML 모드 기본 활성화",
+                "handler": "setState",
+                "if": "{{!route.id}}",
+                "params": {
+                  "target": "local",
+                  "form": {
+                    "content_mode": "html"
+                  }
+                }
+              }
+            ]
           },
           "actions": [
             {

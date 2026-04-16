@@ -209,7 +209,7 @@ const Toolbar: React.FC<{ editor: any; boardSlug?: string; uploadPolicy?: string
 export const HtmlEditor: React.FC<HtmlEditorProps> = ({
   content = '',
   onChange,
-  isHtml: isHtmlProp = false,
+  isHtml: isHtmlProp = true,
   onIsHtmlChange,
   rows = 15,
   placeholder = '',
@@ -224,11 +224,17 @@ export const HtmlEditor: React.FC<HtmlEditorProps> = ({
   boardSlug,
   imageUploadPolicy = 'member',
 }) => {
-  const [isHtml, setIsHtml] = useState(isHtmlProp);
+  const isHtmlPropRef = React.useRef(isHtmlProp);
+  const [isHtml, setIsHtml] = useState(true);
   const [sourceMode, setSourceMode] = useState(false);
   const [localContent, setLocalContent] = useState(content);
 
-  useEffect(() => { setIsHtml(isHtmlProp); }, [isHtmlProp]);
+  useEffect(() => {
+    if (isHtmlPropRef.current !== isHtmlProp) {
+      isHtmlPropRef.current = isHtmlProp;
+      setIsHtml(isHtmlProp);
+    }
+  }, [isHtmlProp]);
   useEffect(() => { setLocalContent(content); }, [content]);
 
   // onChange 콜백 발생

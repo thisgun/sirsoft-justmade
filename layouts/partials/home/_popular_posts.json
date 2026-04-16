@@ -39,7 +39,7 @@
       "type": "basic",
       "name": "Div",
       "if": "{{popular_posts.data && popular_posts.data.length > 0}}",
-      "props": { "className": "space-y-0.5 flex-1" },
+      "props": { "className": "space-y-0.5" },
       "iteration": { "source": "{{popular_posts.data ?? []}}", "item_var": "post" },
       "children": [
         {

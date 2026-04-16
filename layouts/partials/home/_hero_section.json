@@ -124,7 +124,7 @@
                         {
                           "type": "click",
                           "handler": "navigate",
-                          "params": { "path": "/board/popular" }
+                          "params": { "path": "/boards/popular" }
                         }
                       ],
                       "children": [
