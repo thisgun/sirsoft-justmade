@@ -129,8 +129,8 @@
           "actions": [
             {
               "type": "click",
-              "handler": "setState",
-              "params": { "target": "_local.paymentMethod", "value": "{{method.id}}" }
+              "handler": "sirsoft-pay-nicepayments.setPaymentMethod",
+              "params": { "paymentMethod": "{{method.id}}" }
             }
           ]
         }
