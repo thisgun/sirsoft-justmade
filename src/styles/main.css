@@ -369,6 +369,16 @@
   max-width: 220px;
 }
 
+/* G7Core 모달: .modal.modal-open 클래스 없이 고정 오버레이로 렌더링하므로
+   DaisyUI 기본 opacity: 0 을 override */
+@layer utilities {
+  .modal-box[role="dialog"] {
+    opacity: 1;
+    scale: 1;
+    translate: 0px;
+  }
+}
+
 @utility notice-ticker {
   mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
