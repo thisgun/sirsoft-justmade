@@ -297,7 +297,7 @@
                         "props": { "className": "flex justify-between pt-2 border-t border-blue-200 dark:border-blue-700 mt-2" },
                         "children": [
                           { "type": "basic", "name": "Span", "props": { "className": "text-gray-600 dark:text-gray-400" }, "text": "$t:shop.order_complete.deposit_due" },
-                          { "type": "basic", "name": "Span", "props": { "className": "font-medium text-red-600 dark:text-red-400" }, "text": "{{orderData?.data?.payment?.vbank_due_at}}" }
+                          { "type": "basic", "name": "Span", "props": { "className": "font-medium text-red-600 dark:text-red-400" }, "text": "{{orderData?.data?.payment?.due_date_formatted}}" }
                         ]
                       }
                     ]

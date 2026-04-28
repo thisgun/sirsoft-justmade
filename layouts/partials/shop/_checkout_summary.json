@@ -476,6 +476,15 @@
                             }
                           },
                           {
+                            "if": "{{response.data.requires_pg_payment && response.data.pg_provider === 'sirsoft-nicepayments'}}",
+                            "then": {
+                              "handler": "sirsoft-pay-nicepayments.requestPayment",
+                              "params": {
+                                "pgPaymentData": "{{response.data.pg_payment_data}}"
+                              }
+                            }
+                          },
+                          {
                             "then": {
                               "handler": "navigate",
                               "params": { "path": "{{response.data.redirect_url ?? _global.shopBase + '/orders/' + response.data.order.order_number + '/complete'}}" }

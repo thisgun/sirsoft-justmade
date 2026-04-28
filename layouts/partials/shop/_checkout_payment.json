@@ -5,6 +5,7 @@
   },
   "type": "basic",
   "name": "Div",
+  "id": "nicepay_checkout_payment_section",
   "props": { "className": "card bg-base-100 shadow-sm p-6" },
   "responsive": {
     "portable": {
